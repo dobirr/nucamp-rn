@@ -4,6 +4,7 @@ import { Avatar, ListItem } from 'react-native-elements';
 import {useSelector} from "react-redux";
 import {baseUrl} from "../shared/baseUrl";
 import Loading from "../components/LoadingComponent";
+import * as Animatable from 'react-native-animatable';
 
 
 const Mission = () => {
@@ -36,39 +37,53 @@ const AboutScreen = () => {
     }
     if(partners.errMsg) {
         return (
+            <Animatable.View
+                animation='fadeInDown'
+                duration={2000}
+                delay={1000}
+            >
+                <ScrollView>
+                    <Mission />
+                    <Card>
+                        <Card.Title>Community Partners</Card.Title>
+                        <Card.Divider />
+                        <Text>{partners.errMsg}</Text>
+                    </Card>
+                </ScrollView>
+            </Animatable.View>
+        )
+    }
+
+    return (
+        <Animatable.View
+            animation='fadeInDown'
+            duration={2000}
+            delay={1000}
+        >
             <ScrollView>
                 <Mission />
                 <Card>
                     <Card.Title>Community Partners</Card.Title>
                     <Card.Divider />
-                    <Text>{partners.errMsg}</Text>
+                    {partners.partnersArray.map((partner) => {
+                            return (
+                                <ListItem key={partner.id}>
+                                    <Avatar source={{uri: baseUrl + partner.image}} rounded />
+                                    <ListItem.Content>
+                                        <ListItem.Title>{partner.name}</ListItem.Title>
+                                        <ListItem.Subtitle>
+                                            {partner.description}
+                                        </ListItem.Subtitle>
+                                    </ListItem.Content>
+                                </ListItem>
+                            )
+                        }
+                    )}
+
                 </Card>
             </ScrollView>
-        )
-    }
-
-    return <ScrollView>
-        <Mission />
-        <Card>
-            <Card.Title>Community Partners</Card.Title>
-            <Card.Divider />
-            {partners.partnersArray.map((partner) => {
-                    return (
-                        <ListItem key={partner.id}>
-                            <Avatar source={{uri: baseUrl + partner.image}} rounded />
-                            <ListItem.Content>
-                                <ListItem.Title>{partner.name}</ListItem.Title>
-                                <ListItem.Subtitle>
-                                    {partner.description}
-                                </ListItem.Subtitle>
-                            </ListItem.Content>
-                        </ListItem>
-                    )
-                }
-            )}
-
-        </Card>
-    </ScrollView>
+        </Animatable.View>
+    )
 }
 
 export default AboutScreen;
